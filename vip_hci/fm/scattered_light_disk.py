@@ -344,16 +344,18 @@ class ScatteredLightDisk(object):
                 cosphi_vector)
             image = np.ndarray((self.ny, self.nx))
             image.fill(0.)
-            image[validPixel_map] = rho_vector*phase_function/d2star_vector
+            # image[validPixel_map] = rho_vector*phase_function/d2star_vector
+            image[validPixel_map] = np.rad2deg(np.arccos(cosphi_vector))
             limage[il, :, :] = image
         self.scattered_light_map.fill(0.)
-        for il in range(1, nbSlices):
-            self.scattered_light_map += (ll[il]-ll[il-1]) * (limage[il-1, :, :] +
-                                                             limage[il, :, :])
-        self.scattered_light_map[validPixel_map] *= dl_map[validPixel_map] / 2. * self.pxInAU**2
-        if self.flux_max is not None:
-            self.scattered_light_map *= (self.flux_max /
-                                         np.nanmax(self.scattered_light_map))
+        # for il in range(1, nbSlices):
+        #     self.scattered_light_map += (ll[il]-ll[il-1]) * (limage[il-1, :, :] +
+        #                                                      limage[il, :, :])
+        # self.scattered_light_map[validPixel_map] *= dl_map[validPixel_map] / 2. * self.pxInAU**2
+        self.scattered_light_map = limage[nbSlices//2, :, :]
+        # if self.flux_max is not None:
+        #     self.scattered_light_map *= (self.flux_max /
+        #                                  np.nanmax(self.scattered_light_map))
         return self.scattered_light_map
 
 
